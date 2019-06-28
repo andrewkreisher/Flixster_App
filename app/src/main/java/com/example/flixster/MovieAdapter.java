@@ -21,6 +21,8 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
+
+    private OnClickListener monClickListener;
     //list of movies
     ArrayList<Movie> movies;
 
@@ -38,7 +40,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         this.config = config;
     }
 
-    public MovieAdapter(ArrayList<Movie> movies) {
+    public MovieAdapter(ArrayList<Movie> movies, OnClickListener onClickListener) {
+        this.monClickListener = onClickListener;
         this.movies = movies;
     }
 
@@ -53,7 +56,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         //create view using item_movie layout
         View movieView = inflater.inflate(R.layout.item_movie, parent, false);
         // return a new viewHolder
-        return new ViewHolder(movieView);
+        return new ViewHolder(movieView, monClickListener);
     }
 
     //binds an inflated view to a item on list
@@ -108,7 +111,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
 //create the viewholder as static inner class
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         View view;
         //track view objects
@@ -116,9 +119,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         ImageView ivBackdropImage;
         TextView tvTitle;
         TextView tvOverview;
+        OnClickListener onClickListener;
 
-
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnClickListener onClickListener) {
             super(itemView);
             //lookup view objects using id
             view = itemView;
@@ -126,6 +129,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             ivPosterImage = (ImageView) itemView.findViewById(R.id.ivPosterImage);
             tvOverview = (TextView) itemView.findViewById(R.id.tvOverview);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+            this.onClickListener  = onClickListener;
+            itemView.setOnClickListener(this);
+
+
         }
+
+        @Override
+        public void onClick(View v) {
+            onClickListener.onClick(getAdapterPosition());
+        }
+    }
+
+
+    public interface OnClickListener{
+        void onClick(int position);
     }
 }

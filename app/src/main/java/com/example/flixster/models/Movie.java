@@ -10,6 +10,7 @@ public class Movie {
     private String overview;
     private String posterPath; //only path
     private String backdropPath;
+    private Double ratings;
 
     //initialize from JSON data
     public Movie(JSONObject object) throws JSONException {
@@ -17,6 +18,7 @@ public class Movie {
         overview = object.getString("overview");
         posterPath = object.getString("poster_path");
         backdropPath = object.getString("backdrop_path");
+        ratings = object.getDouble("vote_average");
     }
 
     public String getTitle() {
@@ -33,5 +35,9 @@ public class Movie {
 
     public String getBackdropPath() {
         return backdropPath;
+    }
+
+    public Double getRatings() {
+        return ratings;
     }
 }

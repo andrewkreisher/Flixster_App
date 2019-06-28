@@ -1,5 +1,6 @@
 package com.example.flixster;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,10 +22,13 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.OnClickListener{
 
 
-
+    public final static String MOVIE_TITLE = "movieTitle";
+    public final static String MOVIE_OVERVIEW = "movieOverview";
+    public final static String MOVIE_IMAGE = "movieImage";
+    public final static String MOVIE_RATING = "movieRating";
     //base url for api
     public final static String API_BASE_URL = "https://api.themoviedb.org/3";
     //param name for the api key
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         //inir movie list
         movies = new ArrayList<>();
         //init adapter - movies cannot be changed after this
-        adapter = new MovieAdapter(movies);
+        adapter = new MovieAdapter(movies, this);
         //resolve the recycler view and connect layout manager and adapter
         rvMovies = (RecyclerView) findViewById(R.id.rvMovies);
         rvMovies.setLayoutManager(new LinearLayoutManager(this));
@@ -75,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+
 
 
     //get list of currently playing movies from api
@@ -148,5 +155,18 @@ public class MainActivity extends AppCompatActivity {
             //show a toast with error
             Toast.makeText(getApplicationContext(),message, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onClick(int i) {
+        Intent intent = new Intent(MainActivity.this, moreInfo.class);
+        //pass data
+        intent.putExtra(MOVIE_TITLE, movies.get(i).getTitle());
+        intent.putExtra(MOVIE_OVERVIEW, movies.get(i).getOverview());
+        intent.putExtra(MOVIE_RATING, movies.get(i).getRatings());
+        intent.putExtra(MOVIE_IMAGE, config.getImageUrl(config.getBackdropSize(), movies.get(i).getBackdropPath()));
+        //display activity
+        startActivity(intent);
+        //startActivityForResult(intent,EDIT_REQUEST_CODE);
     }
 }
